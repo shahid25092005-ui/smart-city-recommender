@@ -1,31 +1,34 @@
-item_id,name,category,tags,location_zone,popularity_score,is_24x7,accessibility_features
-1,EV Station Alpha,Mobility,"fast-charge, cafe, lounge, app-enabled, card-payment",north,0.92,True,"wheelchair, braille"
-2,EV Station Beta,Mobility,"slow-charge, residential, 24x7, subscription",south,0.78,True,"wheelchair"
-3,Metro Central,Mobility,"underground, high-frequency, ac, digital-tickets, security",central,0.95,False,"wheelchair, braille, audio-announcement"
-4,Bike Share Hub North,Mobility,"dockless, electric-bikes, app, solar-powered, 24x7",north,0.85,True,"wheelchair"
-5,Smart Parking Tower,Mobility,"multi-level, real-time, reservation, ev-charging, payment-app",west,0.73,False,"wheelchair"
-6,Air Quality Monitor Alpha,Environment,"real-time, pm2.5, no2, co2, weather-station",east,0.68,True,"braille"
-7,Noise Sensor Network,Environment,"decibel, traffic-noise, industrial-zone, 24x7, data-logging",north,0.62,True,"none"
-8,Urban Tree Zone,Environment,"green-zone, oxygen, biodiversity, seating, shade",central,0.88,False,"wheelchair"
-9,SOS Emergency Booth,Safety,"panic-button, cctv, intercom, first-aid, police-alert",south,0.96,True,"wheelchair, braille"
-10,CCTV Smart Node,Safety,"facial-recognition, anpr, license-plate, motion-detection, cloud-recording",west,0.84,True,"none"
-11,Flood Sensor Grid,Safety,"water-level, real-time-alert, weather-integration, evacuation-route",east,0.71,True,"braille"
-12,Smart Light Pole,Utility,"led, motion-sensor, dimming, solar, wifi-hotspot",central,0.79,True,"wheelchair"
-13,Waste Bin IQ,Utility,"fill-level, compaction, solar, route-optimization, app-notify",north,0.67,False,"wheelchair"
-14,Public WiFi Zone,Utility,"5g, free, high-speed, captive-portal, coverage-area",south,0.91,True,"braille"
-15,Community Library Hub,Civic,"books, digital-media, study-rooms, free-wifi, events",west,0.86,False,"wheelchair, braille"
-16,Smart Water Station,Civic,"filtered, bottle-filling, payment-app, usage-tracker, chilled",east,0.74,True,"wheelchair"
-17,Battery Swapping Kiosk,Civic,"ev-scooter, quick-swap, subscription, app, 24x7",central,0.82,True,"wheelchair"
-18,EV Station Delta,Mobility,"fast-charge, shopping-mall, 4-stalls, app, loyalty-program",west,0.89,True,"wheelchair"
-19,Metro North Extension,Mobility,"elevated, express, contactless, luggage-space",north,0.87,False,"wheelchair, braille"
-20,Green Bike Corridor,Mobility,"dedicated-lane, greenery, shade, rest-stops, scenic",south,0.76,False,"wheelchair"
-21,CO2 Monitor Pro,Environment,"indoor, outdoor, industrial, dashboard, alerts",west,0.59,True,"braille"
-22,Weather Station Array,Environment,"temp, humidity, wind, rain, solar-radiation",north,0.72,True,"none"
-23,CCTV Plus AI,Safety,"crowd-counting, social-distancing, mask-detection, anomaly",central,0.94,True,"none"
-24,Emergency Siren Network,Safety,"loudspeaker, zone-alert, mobile-notify, backup-power",south,0.83,True,"audio-announcement"
-25,Smart Bench,Utility,"solar-charging, wifi, phone-charger, seating, bluetooth",east,0.65,False,"wheelchair"
-26,Automated Waste Segregator,Utility,"recycling, compost, landfill, ai-vision, odor-control",west,0.70,False,"wheelchair, braille"
-27,Digital Kiosk,Civic,"wayfinding, city-info, ticketing, emergency-alerts, translation",central,0.81,True,"wheelchair, braille, audio"
-28,EV Station Eco,Mobility,"solar-canopy, battery-storage, green-energy, rewards",east,0.77,True,"wheelchair"
-29,Metro South Interchange,Mobility,"multi-modal, bus-connect, taxi-stand, food-court",south,0.90,False,"wheelchair, braille"
-30,Smart Park Zone,Civic,"dog-park, exercise-equipment, lighting, cctv, seating",north,0.69,False,"wheelchair"
+item_id,name,category,tags,location_zone,popularity_score,is_24x7,accessibility_features,distance_km
+1,Fast Electric Car Charger,Mobility,"fast-charge, cafe, lounge, app-enabled, card-payment",north,0.92,True,"wheelchair, braille",2.4
+2,24/7 Electric Car Charger,Mobility,"slow-charge, residential, 24x7, subscription",south,0.78,True,"wheelchair",5.1
+3,Main Train Station,Mobility,"underground, high-frequency, ac, digital-tickets, security",central,0.95,False,"wheelchair, braille, audio-announcement",0.8
+4,North Side Bike Rental,Mobility,"dockless, electric-bikes, app, solar-powered, 24x7",north,0.85,True,"wheelchair",1.2
+5,High-Tech Parking Garage,Mobility,"multi-level, real-time, reservation, ev-charging, payment-app",west,0.73,False,"wheelchair",3.5
+6,Air Quality Sensor,Environment,"real-time, pm2.5, no2, co2, weather-station",east,0.68,True,"braille",4.2
+7,Noise Level Monitor,Environment,"decibel, traffic-noise, industrial-zone, 24x7, data-logging",north,0.62,True,"none",6.7
+8,City Garden & Park,Environment,"green-zone, oxygen, biodiversity, seating, shade",central,0.88,False,"wheelchair",1.5
+9,Emergency Help Button,Safety,"panic-button, cctv, intercom, first-aid, police-alert",south,0.96,True,"wheelchair, braille",0.4
+10,Security Camera,Safety,"facial-recognition, anpr, license-plate, motion-detection, cloud-recording",west,0.84,True,"none",2.1
+11,Water Level Warning System,Safety,"water-level, real-time-alert, weather-integration, evacuation-route",east,0.71,True,"braille",8.3
+12,Smart Street Lamp,Utility,"led, motion-sensor, dimming, solar, wifi-hotspot",central,0.79,True,"wheelchair",0.9
+13,Smart Trash Can,Utility,"fill-level, compaction, solar, route-optimization, app-notify",north,0.67,False,"wheelchair",1.8
+14,Free Public WiFi,Utility,"5g, free, high-speed, captive-portal, coverage-area",south,0.91,True,"braille",2.7
+15,Neighborhood Library,Civic,"books, digital-media, study-rooms, free-wifi, events",west,0.86,False,"wheelchair, braille",4.5
+16,Clean Water Refill Point,Civic,"filtered, bottle-filling, payment-app, usage-tracker, chilled",east,0.74,True,"wheelchair",3.2
+17,Electric Scooter Battery Swap,Civic,"ev-scooter, quick-swap, subscription, app, 24x7",central,0.82,True,"wheelchair",1.1
+18,Mall Electric Car Charger,Mobility,"fast-charge, shopping-mall, 4-stalls, app, loyalty-program",west,0.89,True,"wheelchair",7.4
+19,North Train Line,Mobility,"elevated, express, contactless, luggage-space",north,0.87,False,"wheelchair, braille",5.6
+20,Scenic Bike Path,Mobility,"dedicated-lane, greenery, shade, rest-stops, scenic",south,0.76,False,"wheelchair",9.2
+21,CO2 Level Tracker,Environment,"indoor, outdoor, industrial, dashboard, alerts",west,0.59,True,"braille",10.5
+22,City Weather Center,Environment,"temp, humidity, wind, rain, solar-radiation",north,0.72,True,"none",12.1
+23,AI Security Camera,Safety,"crowd-counting, social-distancing, mask-detection, anomaly",central,0.94,True,"none",1.3
+24,Loud Emergency Siren,Safety,"loudspeaker, zone-alert, mobile-notify, backup-power",south,0.83,True,"audio-announcement",6.2
+25,Solar Charging Bench,Utility,"solar-charging, wifi, phone-charger, seating, bluetooth",east,0.65,False,"wheelchair",4.8
+26,Sorting Trash Bin,Utility,"recycling, compost, landfill, ai-vision, odor-control",west,0.70,False,"wheelchair, braille",5.9
+27,City Info Screen,Civic,"wayfinding, city-info, ticketing, emergency-alerts, translation",central,0.81,True,"wheelchair, braille, audio-announcement",0.5
+28,Solar Powered Car Charger,Mobility,"solar-canopy, battery-storage, green-energy, rewards",east,0.77,True,"wheelchair",14.2
+29,South Train & Bus Hub,Mobility,"multi-modal, bus-connect, taxi-stand, food-court",south,0.90,False,"wheelchair, braille",3.8
+30,Community Park,Civic,"dog-park, exercise-equipment, lighting, cctv, seating",north,0.69,False,"wheelchair",2.9
+
+
+

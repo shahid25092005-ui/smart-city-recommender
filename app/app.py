@@ -225,15 +225,17 @@ selected_item = st.selectbox("Choose an item to get recommendations:", all_items
 item_metadata = st.session_state.recommender.data_loader.get_item_by_name(selected_item)
 
 if item_metadata:
-    col1, col2, col3, col4 = st.columns(4)
+    col1, col2, col3, col4, col5 = st.columns(5)
     with col1:
         st.metric("Category", item_metadata['category'])
     with col2:
-        st.metric("Location Zone", item_metadata['location_zone'].title())
+        st.metric("Distance", f"{item_metadata['distance_km']} km")
     with col3:
-        st.metric("Popularity", f"{item_metadata['popularity_score']*100:.0f}%")
+        st.metric("Location", item_metadata['location_zone'].title())
     with col4:
-        st.metric("24x7 Available", "Yes" if item_metadata['is_24x7'] else "No")
+        st.metric("Popularity", f"{item_metadata['popularity_score']*100:.0f}%")
+    with col5:
+        st.metric("24x7", "Yes" if item_metadata['is_24x7'] else "No")
     
     st.markdown(f"**Tags:** {', '.join(item_metadata['tags'])}")
     if item_metadata['accessibility_features']:
@@ -281,7 +283,7 @@ if 'recommendations' in st.session_state and st.session_state.recommendations:
                             f'{is_24x7_badge}' \
                             f'</div>' \
                             f'<div class="similarity-score">{rec["similarity_score"]:.1f}%</div>' \
-                            f'<small style="color: #64748b;">Match Score</small>' \
+                            f'<small style="color: #64748b;">Match Score | 📍 {rec["distance_km"]} km away</small>' \
                             f'<p style="margin-top: 10px;"><strong>Tags:</strong> {", ".join(rec["tags"][:3])}</p>' \
                             f'</div>'
                 st.markdown(card_html, unsafe_allow_html=True)

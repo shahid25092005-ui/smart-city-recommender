@@ -15,7 +15,7 @@ class TestDataIntegrity(unittest.TestCase):
         """Test that CSV has all required columns"""
         required_columns = [
             'item_id', 'name', 'category', 'tags', 'location_zone',
-            'popularity_score', 'is_24x7', 'accessibility_features'
+            'popularity_score', 'is_24x7', 'accessibility_features', 'distance_km'
         ]
         
         for col in required_columns:
@@ -30,6 +30,7 @@ class TestDataIntegrity(unittest.TestCase):
         self.assertTrue(pd.api.types.is_string_dtype(self.items_df['location_zone']))
         self.assertTrue(pd.api.types.is_float_dtype(self.items_df['popularity_score']))
         self.assertTrue(pd.api.types.is_bool_dtype(self.items_df['is_24x7']))
+        self.assertTrue(pd.api.types.is_float_dtype(self.items_df['distance_km']))
     
     def test_popularity_scores(self):
         """Test popularity scores are within [0,1] range"""

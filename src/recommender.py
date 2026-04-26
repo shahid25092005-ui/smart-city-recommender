@@ -93,6 +93,7 @@ class SmartRecommender:
                 'similarity_score': round(score * 100, 2),  # Convert to percentage
                 'location_zone': item['location_zone'],
                 'is_24x7': item['is_24x7'],
+                'distance_km': item['distance_km'],
                 'tags': item['tags']
             })
         
@@ -159,7 +160,7 @@ class SmartRecommender:
         # Sort by popularity score
         top_items = category_items.nlargest(top_n, 'popularity_score')
         
-        return top_items[['name', 'category', 'popularity_score', 'location_zone']].to_dict('records')
+        return top_items[['name', 'category', 'popularity_score', 'location_zone', 'distance_km']].to_dict('records')
     
     def get_hybrid_recommendations(self, item_name, popularity_weight=0.2, top_n=5, context='resident'):
         """Combine content similarity with popularity for recommendations"""
