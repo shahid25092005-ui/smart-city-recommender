@@ -141,6 +141,41 @@ st.markdown("""
         background-color: #f56565;
         color: white;
     }
+    .context-card {
+        background: white;
+        padding: 1.2rem;
+        border-radius: 12px;
+        border-left: 5px solid #4f46e5;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    /* Nav bar buttons */
+    .nav-btn-container {
+        display: flex;
+        gap: 0.5rem;
+        background-color: white;
+        padding: 0.6rem;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        border: 1px solid #e2e8f0;
+        margin-bottom: 1.5rem;
+    }
+    .stButton > button.nav-btn-active {
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+        color: white !important;
+        box-shadow: 0 8px 15px rgba(79, 70, 229, 0.4) !important;
+        border: none !important;
+    }
+    .stButton > button.nav-btn-inactive {
+        background-color: transparent !important;
+        color: #64748b !important;
+        border: 1px solid transparent !important;
+    }
+    .stButton > button.nav-btn-inactive:hover {
+        color: #4f46e5 !important;
+        background-color: #f8fafc !important;
+        border-color: #e2e8f0 !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -161,31 +196,6 @@ with st.sidebar:
     st.markdown('<div style="text-align: center; padding-bottom: 1rem;">', unsafe_allow_html=True)
     st.markdown("### 🏙️ SmartRec")
     st.markdown("</div>", unsafe_allow_html=True)
-    st.markdown("---")
-    
-    # Context selection
-    st.subheader("🎯 User Context")
-    context = st.selectbox(
-        "Select your current context:",
-        options=['resident', 'tourist', 'emergency', 'night_mode'],
-        format_func=lambda x: x.replace('_', ' ').title(),
-        key='context_selector'
-    )
-    
-    if context != st.session_state.current_context:
-        st.session_state.current_context = context
-        st.session_state.recommender.compute_similarity_matrix(context=context)
-        st.success(f"Context switched to {context.replace('_', ' ').title()}!")
-    
-    # Context description
-    context_descriptions = {
-        'resident': "🏠 Daily commuter needs practical services",
-        'tourist': "✈️ Exploring the city's amenities",
-        'emergency': "🚨 Safety-critical situation",
-        'night_mode': "🌙 After-dark service requirements"
-    }
-    st.info(context_descriptions[context])
-    
     st.markdown("---")
     
     # About section
@@ -215,6 +225,70 @@ st.markdown(f"""
     </div>
 </div>
 """, unsafe_allow_html=True)
+
+# Navigation Bar for Context
+context_options = {
+    'resident': "🏠 Resident",
+    'tourist': "✈️ Tourist",
+    'emergency': "🚨 Emergency",
+    'night_mode': "🌙 Night Mode"
+}
+
+st.write("🎯 **Select Your Context:**")
+nav_cols = st.columns(len(context_options))
+for i, (key, label) in enumerate(context_options.items()):
+    is_active = st.session_state.current_context == key
+    if nav_cols[i].button(
+        label, 
+        key=f"nav_{key}", 
+        use_container_width=True,
+    ):
+        if st.session_state.current_context != key:
+            st.session_state.current_context = key
+            st.session_state.recommender.compute_similarity_matrix(context=key)
+            st.rerun()
+
+# Apply active/inactive styles using a small hack since Streamlit buttons are hard to style individually
+# We use the key to inject specific styles
+for idx, key in enumerate(context_options.keys()):
+    is_active = st.session_state.current_context == key
+    bg_style = "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important" if is_active else "white !important"
+    text_color = "white !important" if is_active else "#64748b !important"
+    shadow = "0 8px 15px rgba(79, 70, 229, 0.4) !important" if is_active else "none !important"
+    border = "none !important" if is_active else "1px solid #e2e8f0 !important"
+    
+    st.markdown(f"""
+        <style>
+        div[data-testid="stHorizontalBlock"] div:nth-child({idx + 1}) button {{
+            background: {bg_style};
+            color: {text_color};
+            box-shadow: {shadow};
+            border: {border};
+            transition: all 0.3s ease !important;
+        }}
+        div[data-testid="stHorizontalBlock"] div:nth-child({idx + 1}) button:hover {{
+            transform: translateY(-2px);
+            {"box-shadow: 0 10px 20px rgba(79, 70, 229, 0.5) !important;" if is_active else "border-color: #4f46e5 !important; color: #4f46e5 !important;"}
+        }}
+        </style>
+    """, unsafe_allow_html=True)
+
+# Context description card
+context_descriptions = {
+    'resident': "🏠 Resident: Focused on daily commuting, practical services, and long-term utility.",
+    'tourist': "✈️ Tourist: Prioritizing city amenities, landmarks, and leisure activities.",
+    'emergency': "🚨 Emergency: Immediate access to safety-critical infrastructure and medical services.",
+    'night_mode': "🌙 Night Mode: Highlighting 24x7 services and safety-first night infrastructure."
+}
+
+if st.session_state.current_context:
+    st.markdown(f"""
+    <div class="context-card">
+        <div style="font-size: 1.1rem; color: #1e293b;">
+            {context_descriptions[st.session_state.current_context]}
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
 # Search and selection
 st.subheader("🔍 Select a Smart City Item")
