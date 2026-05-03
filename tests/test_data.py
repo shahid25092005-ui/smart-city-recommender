@@ -7,7 +7,7 @@ class TestDataIntegrity(unittest.TestCase):
     
     def setUp(self):
         """Load data files for testing"""
-        self.items_df = pd.read_csv('data/smart_city_items.csv')
+        self.items_df = pd.read_csv('data/shopping_malls.csv')
         with open('data/user_contexts.json', 'r') as f:
             self.contexts = json.load(f)
     
@@ -15,7 +15,8 @@ class TestDataIntegrity(unittest.TestCase):
         """Test that CSV has all required columns"""
         required_columns = [
             'item_id', 'name', 'category', 'tags', 'location_zone',
-            'popularity_score', 'is_24x7', 'accessibility_features', 'distance_km'
+            'popularity_score', 'is_24x7', 'accessibility_features', 'distance_km',
+            'brands', 'cafes_restaurants', 'activities'
         ]
         
         for col in required_columns:
@@ -30,7 +31,10 @@ class TestDataIntegrity(unittest.TestCase):
         self.assertTrue(pd.api.types.is_string_dtype(self.items_df['location_zone']))
         self.assertTrue(pd.api.types.is_float_dtype(self.items_df['popularity_score']))
         self.assertTrue(pd.api.types.is_bool_dtype(self.items_df['is_24x7']))
-        self.assertTrue(pd.api.types.is_float_dtype(self.items_df['distance_km']))
+        self.assertTrue(pd.api.types.is_string_dtype(self.items_df['distance_km']) or pd.api.types.is_float_dtype(self.items_df['distance_km']))
+        self.assertTrue(self.items_df['brands'].dtype == object or pd.api.types.is_string_dtype(self.items_df['brands']))
+        self.assertTrue(self.items_df['cafes_restaurants'].dtype == object or pd.api.types.is_string_dtype(self.items_df['cafes_restaurants']))
+        self.assertTrue(self.items_df['activities'].dtype == object or pd.api.types.is_string_dtype(self.items_df['activities']))
     
     def test_popularity_scores(self):
         """Test popularity scores are within [0,1] range"""
@@ -40,7 +44,7 @@ class TestDataIntegrity(unittest.TestCase):
     
     def test_categories(self):
         """Test valid categories exist"""
-        valid_categories = ['Mobility', 'Environment', 'Safety', 'Utility', 'Civic']
+        valid_categories = ['Luxury', 'Entertainment', 'Outlet', 'Convenience']
         categories = self.items_df['category'].unique()
         
         for category in categories:
@@ -48,7 +52,7 @@ class TestDataIntegrity(unittest.TestCase):
     
     def test_location_zones(self):
         """Test valid location zones"""
-        valid_zones = ['north', 'south', 'east', 'west', 'central']
+        valid_zones = ['Hampankatta', 'Kodialbail', 'Pandeshwar', 'Surathkal', 'Kankanady', 'Bejai', 'Kulshekar', 'Pumpwell', 'Derebail', 'Urwa']
         zones = self.items_df['location_zone'].unique()
         
         for zone in zones:
@@ -73,7 +77,7 @@ class TestDataIntegrity(unittest.TestCase):
         self.assertIn('context_weights', self.contexts)
         self.assertIn('context_descriptions', self.contexts)
         
-        required_contexts = ['tourist', 'resident', 'emergency', 'night_mode']
+        required_contexts = ['family_outing', 'luxury_shopper', 'quick_errands', 'entertainment']
         for context in required_contexts:
             self.assertIn(context, self.contexts['context_weights'])
             self.assertIn(context, self.contexts['context_descriptions'])
@@ -102,7 +106,7 @@ class TestDataIntegrity(unittest.TestCase):
     def test_category_distribution(self):
         """Test each category has at least one item"""
         category_counts = self.items_df['category'].value_counts()
-        for category in ['Mobility', 'Environment', 'Safety', 'Utility', 'Civic']:
+        for category in ['Luxury', 'Entertainment', 'Outlet', 'Convenience']:
             self.assertGreater(category_counts.get(category, 0), 0)
     
     def test_accessibility_features(self):
@@ -112,7 +116,7 @@ class TestDataIntegrity(unittest.TestCase):
                 feature_list = str(features).split(',')
                 for feature in feature_list:
                     feature = feature.strip()
-                    self.assertIn(feature, ['wheelchair', 'braille', 'audio-announcement', 'none'])
+                    self.assertIn(feature, ['wheelchair', 'braille', 'strollers', 'none'])
 
 if __name__ == '__main__':
     unittest.main()

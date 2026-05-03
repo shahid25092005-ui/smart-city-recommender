@@ -15,8 +15,8 @@ from src.utils import format_recommendations_for_display
 
 # Page configuration
 st.set_page_config(
-    page_title="SmartRec - Smart City Recommendation Engine",
-    page_icon="🏙️",
+    page_title="MallRec - Shopping Mall Recommendation Engine",
+    page_icon="🛍️",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -183,43 +183,43 @@ st.markdown("""
 if 'recommender' not in st.session_state:
     @st.cache_resource
     def load_recommender():
-        loader = SmartCityDataLoader('data/smart_city_items.csv', 'data/user_contexts.json')
+        loader = SmartCityDataLoader('data/shopping_malls.csv', 'data/user_contexts.json')
         recommender = SmartRecommender(loader)
         recommender.initialize()
         return recommender
     
     st.session_state.recommender = load_recommender()
-    st.session_state.current_context = 'resident'
+    st.session_state.current_context = 'family_outing'
 
 # Sidebar
 with st.sidebar:
     st.markdown('<div style="text-align: center; padding-bottom: 1rem;">', unsafe_allow_html=True)
-    st.markdown("### 🏙️ SmartRec")
+    st.markdown("### 🛍️ MallRec")
     st.markdown("</div>", unsafe_allow_html=True)
     st.markdown("---")
     
     # About section
-    with st.expander("ℹ️ About SmartRec"):
+    with st.expander("ℹ️ About MallRec"):
         st.markdown("""
-        **SmartRec** is a context-aware recommendation engine for Smart City infrastructure.
+        **MallRec** is a context-aware recommendation engine for Shopping Malls in Mangalore.
         
         **Features:**
         - Content-based filtering with TF-IDF
-        - Context-aware recommendations
+        - Shopper intent-aware recommendations
         - Hybrid scoring (similarity + popularity)
         - Real-time explanation generation
         
-        **Categories:** Mobility, Environment, Safety, Utility, Civic
+        **Categories:** Luxury, Entertainment, Outlet, Convenience
         """)
 
 # Main content
 st.markdown(f"""
 <div class="main-header">
-    <h1>🏙️ Smart City Recommendation Engine</h1>
-    <p>Discover the perfect Smart City services tailored to your needs</p>
+    <h1>🛍️ Shopping Mall Recommendation Engine</h1>
+    <p>Discover the perfect shopping malls tailored to your intent</p>
     <div style="display: flex; gap: 2rem; margin-top: 1.5rem;">
         <div>
-            <small style="opacity: 0.8;">Total Infrastructure Items</small>
+            <small style="opacity: 0.8;">Total Shopping Malls</small>
             <h2 style="margin: 0; color: white !important;">{len(st.session_state.recommender.data_loader.items_df)}</h2>
         </div>
     </div>
@@ -228,10 +228,10 @@ st.markdown(f"""
 
 # Navigation Bar for Context
 context_options = {
-    'resident': "🏠 Resident",
-    'tourist': "✈️ Tourist",
-    'emergency': "🚨 Emergency",
-    'night_mode': "🌙 Night Mode"
+    'family_outing': "👨‍👩‍👧‍👦 Family Outing",
+    'luxury_shopper': "💎 Luxury Shopper",
+    'quick_errands': "🛒 Quick Errands",
+    'entertainment': "🎬 Entertainment"
 }
 
 st.write("🎯 **Select Your Context:**")
@@ -275,10 +275,10 @@ for idx, key in enumerate(context_options.keys()):
 
 # Context description card
 context_descriptions = {
-    'resident': "🏠 Resident: Focused on daily commuting, practical services, and long-term utility.",
-    'tourist': "✈️ Tourist: Prioritizing city amenities, landmarks, and leisure activities.",
-    'emergency': "🚨 Emergency: Immediate access to safety-critical infrastructure and medical services.",
-    'night_mode': "🌙 Night Mode: Highlighting 24x7 services and safety-first night infrastructure."
+    'family_outing': "👨‍👩‍👧‍👦 Family Outing: Looking for family-friendly amenities, dining, and kids entertainment.",
+    'luxury_shopper': "💎 Luxury Shopper: Seeking premium brands, high-end dining, and luxury services.",
+    'quick_errands': "🛒 Quick Errands: Needs quick access to essentials, groceries, and easy parking.",
+    'entertainment': "🎬 Entertainment: Looking for fun activities, movies, gaming, and dining out."
 }
 
 if st.session_state.current_context:
@@ -291,9 +291,9 @@ if st.session_state.current_context:
     """, unsafe_allow_html=True)
 
 # Search and selection
-st.subheader("🔍 Select a Smart City Item")
+st.subheader("🔍 Select a Shopping Mall")
 all_items = st.session_state.recommender.data_loader.get_all_item_names()
-selected_item = st.selectbox("Choose an item to get recommendations:", all_items)
+selected_item = st.selectbox("Choose a mall to get recommendations:", all_items)
 
 # Get item metadata
 item_metadata = st.session_state.recommender.data_loader.get_item_by_name(selected_item)
@@ -349,6 +349,15 @@ if 'recommendations' in st.session_state and st.session_state.recommendations:
     for idx, rec in enumerate(st.session_state.recommendations):
         with cols[idx % 2]:
                 is_24x7_badge = '<span class="category-badge safety-badge">24x7</span>' if rec['is_24x7'] else ''
+                
+                details_html = f'''
+                <div style="margin-top: 15px; font-size: 0.9rem; background-color: #f8fafc; padding: 12px; border-radius: 8px; border-left: 4px solid #7c3aed;">
+                    <p style="margin: 0 0 6px 0; color: #1e293b;"><strong>🛍️ Top Brands:</strong> {rec.get("brands", "N/A")}</p>
+                    <p style="margin: 0 0 6px 0; color: #1e293b;"><strong>🍔 Dining & Cafes:</strong> {rec.get("cafes_restaurants", "N/A")}</p>
+                    <p style="margin: 0; color: #1e293b;"><strong>🎢 Activities:</strong> {rec.get("activities", "N/A")}</p>
+                </div>
+                '''
+                
                 card_html = f'<div class="recommendation-card">' \
                             f'<h3>{idx + 1}. {rec["name"]}</h3>' \
                             f'<div>' \
@@ -358,7 +367,8 @@ if 'recommendations' in st.session_state and st.session_state.recommendations:
                             f'</div>' \
                             f'<div class="similarity-score">{rec["similarity_score"]:.1f}%</div>' \
                             f'<small style="color: #64748b;">Match Score | 📍 {rec["distance_km"]} km away</small>' \
-                            f'<p style="margin-top: 10px;"><strong>Tags:</strong> {", ".join(rec["tags"][:3])}</p>' \
+                            f'<p style="margin-top: 10px;"><strong>Benefits:</strong> {", ".join(rec["tags"][:3])}</p>' \
+                            f'{details_html}' \
                             f'</div>'
                 st.markdown(card_html, unsafe_allow_html=True)
     
@@ -432,8 +442,8 @@ st.markdown("---")
 st.markdown(
     """
     <div style="text-align: center; color: #666; padding: 1rem;">
-        <p>SmartRec v1.0 | Context-Aware Recommendation Engine for Smart Cities</p>
-        <p>🏙️ Mobility | 🌿 Environment | 🚨 Safety | 💡 Utility | 📚 Civic</p>
+        <p>MallRec v1.0 | Context-Aware Recommendation Engine for Shopping Malls</p>
+        <p>💎 Luxury | 🎬 Entertainment | 🛒 Convenience | 🏷️ Outlet</p>
     </div>
     """,
     unsafe_allow_html=True

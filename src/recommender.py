@@ -94,7 +94,10 @@ class SmartRecommender:
                 'location_zone': item['location_zone'],
                 'is_24x7': item['is_24x7'],
                 'distance_km': item['distance_km'],
-                'tags': item['tags']
+                'tags': item['tags'],
+                'brands': item.get('brands', 'N/A'),
+                'cafes_restaurants': item.get('cafes_restaurants', 'N/A'),
+                'activities': item.get('activities', 'N/A')
             })
         
         return results
