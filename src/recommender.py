@@ -99,8 +99,63 @@ class SmartRecommender:
                 'cafes_restaurants': item.get('cafes_restaurants', 'N/A'),
                 'activities': item.get('activities', 'N/A')
             })
-        
         return results
+    
+    def get_recommendations_by_features(self, selected_tags, selected_brands, selected_restaurants, selected_activities, top_n=5):
+        """Get top N recommendations based on user-selected features"""
+        
+        if self.data_loader.items_df is None:
+            self.data_loader.load_items()
+            
+        results = []
+        
+        for _, item in self.data_loader.items_df.iterrows():
+            item_tags = set(item['tags'])
+            item_brands = set(item.get('brands_list', []))
+            item_restaurants = set(item.get('cafes_restaurants_list', []))
+            item_activities = set(item.get('activities_list', []))
+            
+            # Calculate match scores
+            tag_match = len(set(selected_tags).intersection(item_tags)) if selected_tags else 0
+            brand_match = len(set(selected_brands).intersection(item_brands)) if selected_brands else 0
+            rest_match = len(set(selected_restaurants).intersection(item_restaurants)) if selected_restaurants else 0
+            act_match = len(set(selected_activities).intersection(item_activities)) if selected_activities else 0
+            
+            total_selected = len(selected_tags) + len(selected_brands) + len(selected_restaurants) + len(selected_activities)
+            
+            if total_selected == 0:
+                score = item['popularity_score'] * 100 # Default to popularity if nothing selected
+            else:
+                total_matches = tag_match + brand_match + rest_match + act_match
+                # Base score is percentage of selected features that are present
+                score = (total_matches / total_selected) * 100
+                
+                # Add popularity bonus (up to 10 points)
+                score += item['popularity_score'] * 10
+                
+            results.append({
+                'name': item['name'],
+                'category': item['category'],
+                'similarity_score': min(round(score, 2), 100.0),
+                'location_zone': item['location_zone'],
+                'is_24x7': item['is_24x7'],
+                'distance_km': item['distance_km'],
+                'tags': item['tags'],
+                'brands': item.get('brands', 'N/A'),
+                'cafes_restaurants': item.get('cafes_restaurants', 'N/A'),
+                'activities': item.get('activities', 'N/A'),
+                'matched_features': {
+                    'tags': list(set(selected_tags).intersection(item_tags)) if selected_tags else [],
+                    'brands': list(set(selected_brands).intersection(item_brands)) if selected_brands else [],
+                    'restaurants': list(set(selected_restaurants).intersection(item_restaurants)) if selected_restaurants else [],
+                    'activities': list(set(selected_activities).intersection(item_activities)) if selected_activities else []
+                }
+            })
+            
+        # Sort by similarity score (descending)
+        results.sort(key=lambda x: x['similarity_score'], reverse=True)
+        
+        return results[:top_n]
     
     def explain_recommendation(self, item1, item2):
         """Explain why item2 is recommended for item1"""

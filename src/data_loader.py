@@ -22,10 +22,15 @@ class SmartCityDataLoader:
         self.items_df = pd.read_csv(self.data_path)
         
         # Parse tags and accessibility features from strings to lists
-        self.items_df['tags'] = self.items_df['tags'].apply(lambda x: [tag.strip() for tag in str(x).split(',')])
+        self.items_df['tags'] = self.items_df['tags'].apply(lambda x: [tag.strip() for tag in str(x).split(',') if tag.strip() and str(x) != 'nan'])
         self.items_df['accessibility_features'] = self.items_df['accessibility_features'].apply(
             lambda x: [feat.strip() for feat in str(x).split(',')] if pd.notna(x) else []
         )
+        
+        # Parse new granular features
+        self.items_df['brands_list'] = self.items_df['brands'].apply(lambda x: [b.strip() for b in str(x).split(',') if b.strip() and 'TBD' not in b and b.lower() != 'none'])
+        self.items_df['cafes_restaurants_list'] = self.items_df['cafes_restaurants'].apply(lambda x: [r.strip() for r in str(x).split(',') if r.strip() and 'TBD' not in r and r.lower() != 'none'])
+        self.items_df['activities_list'] = self.items_df['activities'].apply(lambda x: [a.strip() for a in str(x).split(',') if a.strip() and 'TBD' not in a and a.lower() != 'none'])
         
         # Convert boolean column
         self.items_df['is_24x7'] = self.items_df['is_24x7'].astype(bool)
@@ -148,3 +153,24 @@ class SmartCityDataLoader:
     def get_all_item_names(self):
         """Return list of all item names"""
         return self.items_df['name'].tolist()
+
+    def get_unique_features(self):
+        """Return unique lists of tags, brands, restaurants, and activities for UI"""
+        if self.items_df is None:
+            self.load_items()
+            
+        def extract_unique(column):
+            all_items = []
+            for item_list in self.items_df[column]:
+                if isinstance(item_list, list):
+                    all_items.extend(item_list)
+            # filter out 'TBD' or 'None'
+            unique_items = sorted(list(set([x for x in all_items if x and x.lower() not in ['tbd', 'none']])))
+            return unique_items
+            
+        return {
+            'tags': extract_unique('tags'),
+            'brands': extract_unique('brands_list'),
+            'restaurants': extract_unique('cafes_restaurants_list'),
+            'activities': extract_unique('activities_list')
+        }
